@@ -16,10 +16,6 @@ app.config.from_object(Config)
 
 USE_SQLITE = app.config.get('DB_TYPE', 'sqlite') == 'sqlite'
 
-# Initialize MySQL tables on startup (for production platforms like Render)
-if not USE_SQLITE:
-    init_mysql_db()
-
 
 # ============================================================
 # SQLite compatibility layer (so the same %s-style queries work)
@@ -183,6 +179,11 @@ def init_mysql_db():
         conn.close()
     except Exception as e:
         app.logger.error(f'MySQL init error: {e}')
+
+
+# Initialize MySQL tables on startup (for production platforms like Render)
+if not USE_SQLITE:
+    init_mysql_db()
 
 
 # ============================================================
