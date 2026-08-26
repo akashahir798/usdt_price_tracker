@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: usdt-tracker
+    runtime: docker
+    plan: free
+    healthCheckPath: /login
+    envVars:
+      - key: DB_TYPE
+        value: mysql
+      - key: FLASK_DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        generateValue: true

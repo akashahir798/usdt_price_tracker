@@ -16,6 +16,10 @@ app.config.from_object(Config)
 
 USE_SQLITE = app.config.get('DB_TYPE', 'sqlite') == 'sqlite'
 
+# Initialize MySQL tables on startup (for production platforms like Render)
+if not USE_SQLITE:
+    init_mysql_db()
+
 
 # ============================================================
 # SQLite compatibility layer (so the same %s-style queries work)
@@ -113,6 +117,72 @@ def init_sqlite_db(path):
         )
         conn.commit()
     conn.close()
+
+
+def init_mysql_db():
+    """Create MySQL tables and default admin user if they don't exist."""
+    import pymysql
+    try:
+        conn = pymysql.connect(
+            host=app.config['MYSQL_HOST'],
+            user=app.config['MYSQL_USER'],
+            password=app.config['MYSQL_PASSWORD'],
+            database=app.config['MYSQL_DB'],
+            charset='utf8mb4',
+            cursorclass=pymysql.cursors.DictCursor,
+            autocommit=True,
+        )
+        cur = conn.cursor()
+
+        # Create tables (IF NOT EXISTS is safe to run multiple times)
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS `users` (
+                id INT NOT NULL AUTO_INCREMENT,
+                username VARCHAR(50) NOT NULL,
+                email VARCHAR(255) NOT NULL,
+                password_hash VARCHAR(255) NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (id),
+                UNIQUE KEY username (username),
+                UNIQUE KEY email (email)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        """)
+
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS `transactions` (
+                id INT NOT NULL AUTO_INCREMENT,
+                user_id INT NOT NULL,
+                transaction_type ENUM('BUY','SELL') NOT NULL,
+                amount DECIMAL(20,8) NOT NULL,
+                buy_price DECIMAL(20,8) NOT NULL,
+                transaction_date DATE NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (id),
+                KEY idx_transactions_user_id (user_id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        """)
+
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS `price_history` (
+                id INT NOT NULL AUTO_INCREMENT,
+                price DECIMAL(20,8) NOT NULL,
+                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (id),
+                KEY idx_price_history_timestamp (timestamp)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        """)
+
+        # Create default admin user if no users exist
+        cur.execute("SELECT COUNT(*) as cnt FROM users")
+        if cur.fetchone()['cnt'] == 0:
+            cur.execute(
+                "INSERT INTO users (username, email, password_hash) VALUES (%s, %s, %s)",
+                ('admin', 'admin@tracker.com', generate_password_hash('pass123')),
+            )
+
+        conn.close()
+    except Exception as e:
+        app.logger.error(f'MySQL init error: {e}')
 
 
 # ============================================================
