@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block body %}
+{% include 'partials/navbar.html' %}
+
+<div class="main-layout">
+    {% include 'partials/sidebar.html' %}
+
+    <main class="content">
+        <!-- Header -->
+        <div class="page-header">
+            <h2>USDT Price Tracker</h2>
+            <div class="price-badge" id="live-price-badge">
+                Loading…
+            </div>
+        </div>
+
+        <!-- Portfolio Summary Cards -->
+        <div class="cards-row" id="portfolio-summary">
+            <div class="card">
+                <div class="card-label">Net Holding</div>
+                <div class="card-value" id="net-holding">0.00 USDT</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Total Investment</div>
+                <div class="card-value" id="total-investment">$0.00</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Current Value</div>
+                <div class="card-value" id="current-value">$0.00</div>
+            </div>
+            <div class="card">
+                <div class="card-label">P/L</div>
+                <div class="card-value" id="pnl">$0.00</div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-container">
+            <div class="chart-card">
+                <h3>Price History (7D)</h3>
+                <div class="chart-wrap">
+                    <canvas id="priceChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3>Portfolio Performance</h3>
+                <div class="chart-wrap">
+                    <canvas id="performanceChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="chart-card">
+            <h3>Recent Transactions</h3>
+            <table class="table" id="recent-transactions">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Price</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </main>
+</div>
+
+{% endblock %}

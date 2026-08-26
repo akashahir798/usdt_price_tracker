@@ -1,0 +1,32 @@
+<div class="modal-overlay" id="add-modal" style="display: none;">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Add Transaction</h3>
+            <span class="modal-close" id="add-modal-close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="add-transaction-form">
+                <div class="form-group">
+                    <label>Type</label>
+                    <select name="transaction_type" required>
+                        <option value="BUY">BUY</option>
+                        <option value="SELL">SELL</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Amount (USDT)</label>
+                    <input type="number" step="0.00000001" name="amount" required>
+                </div>
+                <div class="form-group">
+                    <label>Buy Price (USD)</label>
+                    <input type="number" step="0.00000001" name="buy_price" required>
+                </div>
+                <div class="form-group">
+                    <label>Transaction Date</label>
+                    <input type="date" name="transaction_date" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+        </div>
+    </div>
+</div>

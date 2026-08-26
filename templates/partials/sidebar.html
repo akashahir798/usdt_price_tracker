@@ -1,0 +1,9 @@
+<aside class="sidebar">
+    <ul class="sidebar-menu">
+        <li><a href="{{ url_for('dashboard') }}" {% if request.endpoint == 'dashboard' %}class="active"{% endif %}>Dashboard</a></li>
+        <li><a href="{{ url_for('portfolio') }}" {% if request.endpoint == 'portfolio' %}class="active"{% endif %}>Portfolio</a></li>
+        <li><a href="{{ url_for('transactions') }}" {% if request.endpoint == 'transactions' %}class="active"{% endif %}>Transactions</a></li>
+        <li><a href="{{ url_for('pl_calculator') }}" {% if request.endpoint == 'pl_calculator' %}class="active"{% endif %}>P/L Calculator</a></li>
+        <li><a href="{{ url_for('profile') }}" {% if request.endpoint == 'profile' %}class="active"{% endif %}>Profile</a></li>
+    </ul>
+</aside>

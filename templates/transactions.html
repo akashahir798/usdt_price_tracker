@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Transactions{% endblock %}
+{% block body %}
+{% include 'partials/navbar.html' %}
+
+<div class="main-layout">
+    {% include 'partials/sidebar.html' %}
+
+    <main class="content">
+        <div class="page-header">
+            <h2>Transactions</h2>
+            <button class="btn btn-success" id="open-add-modal" style="margin-left: auto; display: inline-block;">Add Transaction</button>
+        </div>
+
+        <div class="chart-card">
+            <h3>All Transactions</h3>
+            <table class="table" id="transactions-table-full">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Buy Price</th>
+                        <th>Value</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </main>
+</div>
+
+{% include 'partials/add_transaction_modal.html' %}
+{% include 'partials/edit_transaction_modal.html' %}
+
+{% endblock %}
